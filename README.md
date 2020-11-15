@@ -1,4 +1,4 @@
-# Matrix Multiplier
+# 8-bit 10x10 Matrix Multiplier
 
 ## 1. Introduction
 This project outlines the design and implementation of an 8-bit 10x10 matrix multiplier using **Vedic multiplication**. It takes two matrices i.e. **matrix A** and **matrix B** and gives their product **matrix C** i.e. **C=A*B**.  
