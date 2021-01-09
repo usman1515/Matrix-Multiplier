@@ -6,12 +6,14 @@ module tb_carrylookahead_adder;
 localparam DATA_WIDTH=8;
 localparam min0='h0,max0='hffff;
 
+//-------------------------------------------------------------------------- data and control signals
   reg		[(DATA_WIDTH*2)-1:0] inData_A;
   reg		[(DATA_WIDTH*2)-1:0] inData_B;
   reg		cin;
   wire	[(DATA_WIDTH*2)-1:0] outData; 
   wire	cout;
 
+//-------------------------------------------------------------------------- DUT instantiated
 carry_lookaheadadder_16bit CLAA(
 	.inData_A (inData_A ),
 	.inData_B (inData_B ),
@@ -20,8 +22,10 @@ carry_lookaheadadder_16bit CLAA(
 	.cout     (cout     )
 );
 
+//-------------------------------------------------------------------------- main loop
 initial begin
-  $write("\n          Carry Look Ahead Adder 16-bit Testbench                \n");
+	$write("-----------------------------------------------------------------\n");
+  $write("          Carry Look Ahead Adder 16-bit Testbench              \n");
 	$write("-----------------------------------------------------------------\n");
 	repeat(10) begin
 		inData_A=min0+{$random}%(max0-min0);
@@ -34,4 +38,11 @@ initial begin
 	$finish;
 end
 
+//-------------------------------------------------------------------------- vcd output
+initial begin
+	$dumpfile("carrylookahead_adder.vcd");
+	$dumpvars(0,CLAA);
+end
+
+//-------------------------------------------------------------------------- end of code
 endmodule
