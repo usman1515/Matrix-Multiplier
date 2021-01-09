@@ -1,3 +1,4 @@
+`include "../rtl/top_matrix_multiplier.v"
 `timescale 1ns/100ps
 
 module tb_matrix_multiplier;
@@ -45,7 +46,7 @@ logic [DATA_WIDTH-1:0] val_C;
     logic   [DATA_WIDTH-1:0] readData_C;
     logic   resultIsInvalid;
 //-------------------------------------------------------------------------- matrix multipler DUT
-matrix_multiplier #(.DATA_WIDTH (DATA_WIDTH)) DUT_MatMultiplier(
+top_matrix_multiplier #(.DATA_WIDTH (DATA_WIDTH)) DUT_MatMultiplier(
 	.clk             (clk             ),
     .reset_n         (reset_n         ),
     .en_ReadMat_A    (en_ReadMat_A    ),
@@ -163,5 +164,10 @@ task write_matrix_B; begin
     end
 end
 endtask
+
+initial begin
+	$dumpfile("top_matrix_multiplier.vcd");
+	$dumpvars(0,DUT_MatMultiplier);
+end
 //-------------------------------------------------------------------------- end of code
 endmodule
