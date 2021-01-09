@@ -1,3 +1,4 @@
+`include "../rtl/matrix_10x10.v"
 `timescale 1ns/100ps
 
 module tb_matrix_10x10;
@@ -7,12 +8,17 @@ localparam T=2;
 localparam min1='h0,max1='hff;
 integer i,j,k;
 
-logic   clk;
-logic   en_ReadMat,en_WriteMat;
-logic   [3:0] rowAddr,colAddr;
-logic   [DATA_WIDTH-1:0] writeData;
-logic   [DATA_WIDTH-1:0] readData;
+//-------------------------------------------------------------------------- global signals
+reg   clk;
+//-------------------------------------------------------------------------- data and control signals
+reg   en_ReadMat;
+reg   en_WriteMat;
+reg   [3:0] rowAddr;
+reg   [3:0] colAddr;
+reg   [DATA_WIDTH-1:0] writeData;
+wire  [DATA_WIDTH-1:0] readData;
 
+//-------------------------------------------------------------------------- DUT instantiation
 matrix_10x10 #(.DATA_WIDTH (DATA_WIDTH)) MATRIX(
   .clk         (clk         ),
   .en_ReadMat  (en_ReadMat  ),
@@ -23,11 +29,12 @@ matrix_10x10 #(.DATA_WIDTH (DATA_WIDTH)) MATRIX(
   .readData    (readData    )
 );
 
-//--------------------------------------------------------------------------  clock generator
+//-------------------------------------------------------------------------- clock generator
 always begin
   #(T/2) clk=1'b1;    #(T/2) clk=1'b0;
 end
-//--------------------------------------------------------------------------  main loop
+
+//-------------------------------------------------------------------------- main loop
 initial begin
 
   repeat(1)   write_matrix();
@@ -40,7 +47,7 @@ initial begin
   $finish;
 end
 
-//--------------------------------------------------------------------------  tasks
+//-------------------------------------------------------------------------- tasks
 task write_entry(input logic [3:0] row, input logic [3:0] col, input logic [DATA_WIDTH-1:0] value); begin
   @(posedge clk) begin
     en_ReadMat=1'b0;
@@ -75,7 +82,7 @@ task write_matrix; begin
         colAddr=j;
         writeData=$urandom_range(min1,max1);
       end
-      #1 $write("[%0d,%0d]=%4d\t",rowAddr,colAddr,writeData);
+      #1 $write("[%0d,%0d]=%4d  ",rowAddr,colAddr,writeData);
     end
     $write("\n");
   end
@@ -93,7 +100,7 @@ task read_matrix; begin
         rowAddr=i;
         colAddr=j;
       end
-      #1 $write("[%0d,%0d]=%4d\t",rowAddr,colAddr,readData);
+      #1 $write("[%0d,%0d]=%4d  ",rowAddr,colAddr,readData);
     end
     $write("\n");
   end
@@ -112,7 +119,7 @@ task clear_matrix; begin
         colAddr=j;
         writeData='bz;
       end
-      #1 $write("[%0d,%0d]=%4d\t",rowAddr,colAddr,writeData);
+      #1 $write("[%0d,%0d]=%4d  ",rowAddr,colAddr,writeData);
     end
     $write("\n");
   end
@@ -120,4 +127,11 @@ task clear_matrix; begin
 end
 endtask
 
+//-------------------------------------------------------------------------- vcd output
+initial begin
+	$dumpfile("matrix_10x10.vcd");
+	$dumpvars(0,MATRIX);
+end
+
+//-------------------------------------------------------------------------- end of code
 endmodule
